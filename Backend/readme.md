@@ -172,3 +172,106 @@ The request body must be in JSON format and include the following fields:
 
 - Ensure that the `email` and `password` fields are validated.
 - A valid JWT is returned upon successful authentication.
+
+---
+
+## Endpoint: `/users/profile`
+
+### Description
+
+This endpoint is used to retrieve the profile of the authenticated user. It requires a valid JWT token for authentication.
+
+### Method
+
+`GET`
+
+### Headers
+
+| Header         | Type   | Required | Description                  |
+|----------------|--------|----------|------------------------------|
+| `Authorization`| String | Yes      | Bearer token for authentication.|
+
+### Responses
+
+#### Success (200 OK)
+
+```json
+{
+  "_id": "user_id_here",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "johndoe@example.com"
+}
+```
+
+#### Authentication Error (401 Unauthorized)
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+#### Server Error (500 Internal Server Error)
+
+```json
+{
+  "error": "An unexpected error occurred"
+}
+```
+
+### Notes
+
+- Ensure the `Authorization` header contains a valid JWT token.
+- The user profile is retrieved from the token payload.
+
+---
+
+## Endpoint: `/users/logout`
+
+### Description
+
+This endpoint is used to log out the authenticated user. It invalidates the current JWT token by adding it to a blacklist.
+
+### Method
+
+`GET`
+
+### Headers
+
+| Header         | Type   | Required | Description                  |
+|----------------|--------|----------|------------------------------|
+| `Authorization`| String | Yes      | Bearer token for authentication.|
+
+### Responses
+
+#### Success (200 OK)
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Authentication Error (401 Unauthorized)
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+#### Server Error (500 Internal Server Error)
+
+```json
+{
+  "error": "An unexpected error occurred"
+}
+```
+
+### Notes
+
+- Ensure the `Authorization` header contains a valid JWT token.
+- The token is added to a blacklist to prevent further use.
