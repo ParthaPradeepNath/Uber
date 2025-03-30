@@ -275,3 +275,106 @@ This endpoint is used to log out the authenticated user. It invalidates the curr
 
 - Ensure the `Authorization` header contains a valid JWT token.
 - The token is added to a blacklist to prevent further use.
+
+---
+
+## Endpoint: `/captains/register`
+
+### Description
+
+This endpoint is used to register a new captain. It validates the input data, including vehicle details, and creates a new captain in the database.
+
+### Method
+
+`POST`
+
+### Request Body
+
+The request body must be in JSON format and include the following fields:
+
+| Field                   | Type   | Required | Description                                           |
+|-------------------------|--------|----------|-------------------------------------------------------|
+| `fullname.firstname`    | String | Yes      | The first name of the captain (min 3 characters).     |
+| `fullname.lastname`     | String | No       | The last name of the captain (min 3 characters).      |
+| `email`                 | String | Yes      | The email address of the captain (must be valid).     |
+| `password`              | String | Yes      | The password for the captain (min 6 characters).      |
+| `vehicle.color`         | String | Yes      | The color of the vehicle (min 3 characters).          |
+| `vehicle.plate`         | String | Yes      | The license plate of the vehicle (min 3 characters).  |
+| `vehicle.capacity`      | Number | Yes      | The seating capacity of the vehicle (must be numeric).|
+| `vehicle.vehicleType`   | String | Yes      | The type of vehicle (must be `car`, `motorcycle`, or `auto`).|
+
+### Example Request
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Doe"
+  },
+  "email": "janedoe@example.com",
+  "password": "securepassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Responses
+
+#### Success (201 Created)
+
+```json
+{
+  "message": "Captain registered successfully",
+  "captain": {
+    "_id": "captain_id_here",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Doe"
+    },
+    "email": "janedoe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+#### Validation Error (400 Bad Request)
+
+```json
+{
+  "errors": [
+    {
+      "msg": "First name must be at least 3 characters long",
+      "param": "fullname.firstname",
+      "location": "body"
+    },
+    {
+      "msg": "Vehicle type must be car, motorcycle or auto",
+      "param": "vehicle.vehicleType",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### Server Error (500 Internal Server Error)
+
+```json
+{
+  "error": "An unexpected error occurred"
+}
+```
+
+### Notes
+
+- Ensure that the `email` field is unique.
+- Passwords are securely hashed before being stored in the database.
+- Vehicle details are validated before registration.
