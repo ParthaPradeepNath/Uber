@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { mapsApi } from '../services/mapsService';
 
 const LocationSearch = ({
@@ -12,10 +12,6 @@ const LocationSearch = ({
     const [ open, setOpen ] = useState(false);
     const [ loading, setLoading ] = useState(false);
     const debounceRef = useRef(null);
-
-    useEffect(() => {
-        setQuery(value || '');
-    }, [ value ]);
 
     const handleChange = (e) => {
         const q = e.target.value;
@@ -55,7 +51,7 @@ const LocationSearch = ({
                     className="w-full outline-none text-sm ml-2"
                     type="text"
                     placeholder={placeholder}
-                    value={query}
+                    value={query || value}
                     onChange={handleChange}
                     onFocus={() => setOpen(results.length > 0)}
                 />
