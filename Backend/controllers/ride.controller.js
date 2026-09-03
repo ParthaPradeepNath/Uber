@@ -1,6 +1,7 @@
 const rideService = require('../services/ride.service');
 const mapsService = require('../services/maps.service');
 const rideModel = require('../models/ride.model');
+const { broadcastToCaptains, sendToUser } = require('../services/socket.service');
 const { validationResult } = require('express-validator');
 
 module.exports.getFare = async (req, res, next) => {
@@ -43,9 +44,20 @@ module.exports.createRide = async (req, res, next) => {
 
     const availableCaptains = await rideService.findAvailableCaptains(pickup, vehicleType);
 
+    broadcastToCaptains('ride-request', {
+        ride: {
+            _id: ride._id,
+            pickupAddress,
+            destinationAddress,
+            distance,
+            duration,
+            fare,
+            vehicleType,
+        },
+    });
+
     res.status(201).json({
         ride,
-        availableCaptains,
     });
 };
 
@@ -61,6 +73,18 @@ module.exports.confirmRide = async (req, res, next) => {
         rideId,
         captainId: req.captain._id,
     });
+
+    sendToUser('ride-accepted', {
+        ride: {
+            _id: ride._id,
+            status: ride.status,
+            captain: {
+                _id: req.captain._id,
+                fullname: req.captain.fullname,
+                vehicle: req.captain.vehicle,
+            },
+        },
+    }, ride.user.toString());
 
     res.status(201).json({ ride });
 };
@@ -85,7 +109,7 @@ module.exports.startRide = async (req, res, next) => {
 
     const { rideId, otp } = req.body;
 
-    const storedRide = await rideModel.findById(rideId);
+    const storedRide = await rideModel.findById(rideId).select('+otp');
 
     if (!storedRide) {
         return res.status(404).json({ message: 'Ride not found' });
@@ -100,6 +124,13 @@ module.exports.startRide = async (req, res, next) => {
         status: 'in-progress',
         captainId: req.captain._id,
     });
+
+    sendToUser('ride-started', {
+        ride: {
+            _id: ride._id,
+            status: ride.status,
+        },
+    }, ride.user.toString());
 
     res.status(200).json({ ride });
 };
@@ -117,6 +148,15 @@ module.exports.completeRide = async (req, res, next) => {
         status: 'completed',
         captainId: req.captain._id,
     });
+
+    sendToUser('ride-completed', {
+        ride: {
+            _id: ride._id,
+            status: ride.status,
+            fare: ride.fare,
+            payment: ride.payment,
+        },
+    }, ride.user.toString());
 
     res.status(200).json({ ride });
 };

@@ -149,6 +149,18 @@ function sendToCaptain(type, data, captainId) {
     }
 }
 
+function broadcastToCaptains(type, data) {
+    const payload = JSON.stringify({ type, ...data });
+
+    for (const [ ws ] of connectedClients) {
+        if (ws.metadata && ws.metadata.role === 'captain') {
+            if (ws.readyState === ws.OPEN) {
+                ws.send(payload);
+            }
+        }
+    }
+}
+
 function removeClient(ws) {
     connectedClients.delete(ws);
 }
@@ -158,4 +170,5 @@ module.exports = {
     broadcastToUsers,
     sendToUser,
     sendToCaptain,
+    broadcastToCaptains,
 };
