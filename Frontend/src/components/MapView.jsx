@@ -16,6 +16,7 @@ const MapView = ({
     const onMapClickRef = useRef(onMapClick);
     const markersRef = useRef([]);
     const polylineRef = useRef(null);
+    const initialViewRef = useRef({ center, zoom });
 
     useEffect(() => {
         onMapClickRef.current = onMapClick;
@@ -24,9 +25,10 @@ const MapView = ({
     useEffect(() => {
         if (!containerRef.current) return;
 
+        const { center: initialCenter, zoom: initialZoom } = initialViewRef.current;
         const map = L.map(containerRef.current, {
-            center,
-            zoom,
+            center: initialCenter,
+            zoom: initialZoom,
         });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

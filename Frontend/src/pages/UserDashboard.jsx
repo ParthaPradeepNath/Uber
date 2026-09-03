@@ -70,7 +70,8 @@ const UserDashboard = () => {
 
     useEffect(() => {
         if (pickup && destination && pickup.name !== destination.name) {
-            estimateFare();
+            const timer = setTimeout(estimateFare, 0);
+            return () => clearTimeout(timer);
         }
     }, [ pickup, destination, estimateFare ]);
 
