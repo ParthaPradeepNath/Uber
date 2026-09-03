@@ -28,5 +28,13 @@ router.get('/profile', authMiddleware.authCaptain , captainController.getCaptain
 
 router.get('/logout', authMiddleware.authCaptain, captainController.logoutCaptain)
 
+router.patch('/toggle-status', authMiddleware.authCaptain, captainController.toggleCaptainStatus)
+
+router.patch('/update-location', [
+    authMiddleware.authCaptain,
+    body('latitude').isFloat({ min: -90, max: 90 }).withMessage('Invalid latitude'),
+    body('longitude').isFloat({ min: -180, max: 180 }).withMessage('Invalid longitude'),
+], captainController.updateCaptainLocation)
+
 
 module.exports = router;

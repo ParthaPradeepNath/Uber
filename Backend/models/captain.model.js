@@ -60,14 +60,19 @@ const captainSchema = new mongoose.Schema({
     },
 
     location: {
-        ltd: {
-            type: Number,
+        type: {
+            type: String,
+            enum: [ 'Point' ],
+            default: 'Point',
         },
-        lng: {
-            type: Number,
-        }
+        coordinates: {
+            type: [ Number ],
+            default: undefined,
+        },
     }
 })
+
+captainSchema.index({ location: '2dsphere' })
 
 
 captainSchema.methods.generateAuthToken = function () {

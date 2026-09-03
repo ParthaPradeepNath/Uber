@@ -79,3 +79,29 @@ module.exports.logoutCaptain = async (req, res, next) => {
 
     res.status(200).json({ message: 'Logout successfully' });
 }
+
+module.exports.toggleCaptainStatus = async (req, res, next) => {
+    const captain = await captainModel.findById(req.captain._id);
+
+    captain.status = captain.status === 'active' ? 'inactive' : 'active';
+    await captain.save();
+
+    res.status(200).json({ captain });
+}
+
+module.exports.updateCaptainLocation = async (req, res, next) => {
+    const { latitude, longitude } = req.body;
+
+    const captain = await captainModel.findByIdAndUpdate(
+        req.captain._id,
+        {
+            location: {
+                type: 'Point',
+                coordinates: [ longitude, latitude ],
+            },
+        },
+        { new: true },
+    );
+
+    res.status(200).json({ captain });
+}
