@@ -12,6 +12,9 @@ const CaptainDashboard = () => {
     const [ position, setPosition ] = useState(null);
     const [ isOnline, setIsOnline ] = useState(false);
     const [ incomingRide, setIncomingRide ] = useState(null);
+    const [ currentRide, setCurrentRide ] = useState(null);
+    const [ otpInput, setOtpInput ] = useState('');
+    const [ busy, setBusy ] = useState(false);
     const watchIdRef = useRef(null);
 
     const startGeolocation = useCallback(() => {
@@ -77,12 +80,16 @@ const CaptainDashboard = () => {
 
     const acceptRide = async () => {
         if (!incomingRide) return;
+        setBusy(true);
         try {
             const { data } = await rideApi.confirm(incomingRide._id);
+            setCurrentRide(data.ride);
             setIncomingRide(null);
             rideSocket.acceptRide(data.ride._id, captain._id);
         } catch (error) {
             console.error('Accept failed', error);
+        } finally {
+            setBusy(false);
         }
     };
 
@@ -91,6 +98,39 @@ const CaptainDashboard = () => {
             rideSocket.rejectRide(incomingRide._id);
         }
         setIncomingRide(null);
+    };
+
+    const startRide = async () => {
+        if (!currentRide || otpInput.length !== 4) return;
+        setBusy(true);
+        try {
+            const { data } = await rideApi.start(currentRide._id, otpInput);
+            setCurrentRide(data.ride);
+            setOtpInput('');
+        } catch (error) {
+            console.error('Start ride failed', error);
+            alert('Invalid OTP. Ask the rider for the 4-digit code.');
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const completeRide = async () => {
+        if (!currentRide) return;
+        setBusy(true);
+        try {
+            const { data } = await rideApi.complete(currentRide._id);
+            setCurrentRide(data.ride);
+        } catch (error) {
+            console.error('Complete ride failed', error);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const resetRide = () => {
+        setCurrentRide(null);
+        setOtpInput('');
     };
 
     return (
@@ -125,7 +165,80 @@ const CaptainDashboard = () => {
                     }
                 />
 
-                {incomingRide && (
+                {currentRide && (
+                    <div className="absolute bottom-6 left-4 right-4 bg-white rounded-xl shadow-lg z-20 p-4">
+                        <div className="flex items-center justify-between mb-2">
+                            <h2 className="font-bold text-lg">Active Ride</h2>
+                            <span className={`text-xs font-semibold px-2 py-1 rounded-full capitalize ${
+                                currentRide.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+                            }`}>
+                                {currentRide.status}
+                            </span>
+                        </div>
+                        <div className="space-y-1 text-sm mb-3">
+                            <p className="flex justify-between">
+                                <span className="text-gray-500">Pickup</span>
+                                <span className="font-medium">{currentRide.pickupAddress}</span>
+                            </p>
+                            <p className="flex justify-between">
+                                <span className="text-gray-500">Destination</span>
+                                <span className="font-medium">{currentRide.destinationAddress}</span>
+                            </p>
+                            <p className="flex justify-between">
+                                <span className="text-gray-500">Fare</span>
+                                <span className="font-bold text-green-600">${currentRide.fare?.toFixed(2)}</span>
+                            </p>
+                        </div>
+
+                        {currentRide.status === 'accepted' && (
+                            <div className="mb-3">
+                                <label className="text-sm text-gray-600 block mb-1">
+                                    Rider's 4-digit OTP
+                                </label>
+                                <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={4}
+                                    value={otpInput}
+                                    onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ''))}
+                                    placeholder="••••"
+                                    className="w-full border rounded-lg px-3 py-2 text-center text-lg tracking-widest bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                />
+                            </div>
+                        )}
+
+                        {currentRide.status === 'accepted' && (
+                            <button
+                                onClick={startRide}
+                                disabled={otpInput.length !== 4 || busy}
+                                className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg disabled:opacity-40"
+                            >
+                                {busy ? 'Starting...' : 'Start Ride'}
+                            </button>
+                        )}
+
+                        {currentRide.status === 'in-progress' && (
+                            <button
+                                onClick={completeRide}
+                                disabled={busy}
+                                className="w-full bg-black text-white font-semibold py-3 rounded-lg disabled:opacity-40"
+                            >
+                                {busy ? 'Completing...' : 'Complete Ride'}
+                            </button>
+                        )}
+
+                        {currentRide.status === 'completed' && (
+                            <button
+                                onClick={resetRide}
+                                className="w-full bg-black text-white font-semibold py-3 rounded-lg"
+                            >
+                                Go Available Again
+                            </button>
+                        )}
+                    </div>
+                )}
+
+                {incomingRide && !currentRide && (
                     <div className="absolute bottom-6 left-4 right-4 bg-white rounded-xl shadow-lg z-20 p-4">
                         <h2 className="font-bold text-lg mb-2">New Ride Request</h2>
                         <div className="space-y-1 text-sm mb-3">

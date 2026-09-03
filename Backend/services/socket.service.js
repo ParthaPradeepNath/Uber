@@ -34,6 +34,9 @@ function handleMessage(ws, message) {
         case 'register':
             registerClient(ws, message);
             break;
+        case 'follow-captain':
+            followCaptain(ws, message);
+            break;
         case 'update-location':
             handleUpdateLocation(ws, message);
             break;
@@ -68,6 +71,22 @@ function registerClient(ws, message) {
     });
 }
 
+function followCaptain(ws, message) {
+    const { captainId } = message;
+
+    if (!ws.metadata || ws.metadata.role !== 'user') {
+        return send(ws, { type: 'error', message: 'Only users can follow a captain' });
+    }
+
+    if (!captainId) {
+        return send(ws, { type: 'error', message: 'captainId is required' });
+    }
+
+    ws.metadata.followingCaptainId = captainId;
+
+    send(ws, { type: 'following-captain', captainId });
+}
+
 function handleUpdateLocation(ws, message) {
     const { latitude, longitude } = message;
 
@@ -75,12 +94,25 @@ function handleUpdateLocation(ws, message) {
         return send(ws, { type: 'error', message: 'Only captains can update location' });
     }
 
-    const rideKey = `captain:${ws.metadata.userId}`;
-    broadcastToUsers('captain-location', {
-        captainId: ws.metadata.userId,
+    const captainId = ws.metadata.userId;
+    const payload = JSON.stringify({
+        type: 'captain-location',
+        captainId,
         latitude,
         longitude,
     });
+
+    for (const [ clientWs ] of connectedClients) {
+        if (
+            clientWs.metadata &&
+            clientWs.metadata.role === 'user' &&
+            clientWs.metadata.followingCaptainId === captainId
+        ) {
+            if (clientWs.readyState === clientWs.OPEN) {
+                clientWs.send(payload);
+            }
+        }
+    }
 }
 
 function handleAcceptRide(ws, message) {
