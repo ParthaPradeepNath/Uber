@@ -9,10 +9,16 @@ React 19 + Vite 8 rider & captain dashboards with live Leaflet maps.
 
 ## Getting Started
 
+This repo is a single **pnpm workspace** — install everything from the root
+(`pnpm install`), then target this package by name:
+
 ```bash
-npm install
-npm run dev        # http://localhost:5173
+pnpm --filter uber-clone-frontend dev    # http://localhost:5173
+pnpm --filter uber-clone-frontend build  # production build
+pnpm --filter uber-clone-frontend lint   # ESLint
 ```
+
+> From inside this directory, just run `pnpm dev`.
 
 The Vite dev server proxies `/users`, `/captains`, `/rides`, and `/ws` to the
 backend on `http://localhost:3000` (see `vite.config.js`).
@@ -25,10 +31,10 @@ backend on `http://localhost:3000` (see `vite.config.js`).
 
 ## Scripts
 ```bash
-npm run dev       # dev server
-npm run build     # production build
-npm run lint      # ESLint
-npm run preview   # preview production build
+pnpm dev       # dev server
+pnpm build     # production build
+pnpm lint      # ESLint
+pnpm preview   # preview production build
 ```
 
 See the root [`README.md`](../README.md) for the full setup guide and

@@ -12,17 +12,24 @@ REST API + native WebSocket layer for the Uber clone ride-hailing platform.
 
 ## Getting Started
 
+> This repo is a single **pnpm workspace**. From the root, one command
+> installs both `Backend/` and `Frontend/`:
+
 ```bash
-# 1. Install dependencies
-npm install
+# From the repo root
+pnpm install
 
-# 2. Configure environment
-cp .env.example .env
-#    set DB_CONNECT (MongoDB URI) and a strong JWT_SECRET
+# Then from anywhere, run only this workspace
+pnpm --filter uber-clone-backend dev   # nodemon development
+pnpm --filter uber-clone-backend start # production
+```
 
-# 3. Run
-npm run dev        # nodemon development
-npm start          # production
+Or from inside this directory simply:
+
+```bash
+cd Backend
+cp .env.example .env   # set DB_CONNECT and JWT_SECRET
+pnpm dev               # or: pnpm start
 ```
 
 Server listens on `PORT` (default `3000`). WebSocket endpoint: `/ws`.

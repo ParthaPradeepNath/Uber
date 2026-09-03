@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Uber clone ride-hailing backend — REST API with native WebSocket real-time ride tracking",
   "main": "server.js",
+  "packageManager": "pnpm@11.24.0",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"

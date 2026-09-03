@@ -18,6 +18,7 @@ billing** and a **native WebSocket** pipeline.
 ![Vite](https://img.shields.io/badge/vite-8-646CFF?logo=vite&logoColor=white)
 ![Tailwind](https://img.shields.io/badge/tailwindcss-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![WebSocket](https://img.shields.io/badge/realtime-websocket-4FC08D)
+![pnpm](https://img.shields.io/badge/pnpm-workspace-F69220?logo=pnpm&logoColor=white)
 
 </div>
 
@@ -71,8 +72,8 @@ The entire mapping stack runs on the **OpenStreetMap ecosystem**:
 
 ## 🚀 Getting Started
 
-> **Prereqs:** Node.js 20+, a MongoDB database (local or
-> [MongoDB Atlas](https://www.mongodb.com/atlas)).
+> **Prereqs:** Node.js 20+, [pnpm](https://pnpm.io/) 9+, a MongoDB database
+> (local or [MongoDB Atlas](https://www.mongodb.com/atlas)).
 
 ### 1. Clone & install
 
@@ -80,14 +81,13 @@ The entire mapping stack runs on the **OpenStreetMap ecosystem**:
 git clone <your-repo-url> uber-clone
 cd uber-clone
 
-# Backend
-cd Backend
-npm install
-
-# Frontend
-cd ../Frontend
-npm install
+# Install backend + frontend together (single pnpm workspace)
+pnpm install
 ```
+
+> The repo is a **pnpm workspace** (`pnpm-workspace.yaml`) covering `Backend/`
+> and `Frontend/`, so one command installs both. `bcrypt`'s native build is
+> pre-approved in the workspace config.
 
 ### 2. Configure the backend
 
@@ -110,13 +110,14 @@ JWT_SECRET=your_long_random_secret
 
 ```bash
 # Terminal 1 — backend (http://localhost:3000, ws://localhost:3000/ws)
-cd Backend
-npm run dev
+pnpm --filter uber-clone-backend dev
 
 # Terminal 2 — frontend (http://localhost:5173)
-cd Frontend
-npm run dev
+pnpm --filter uber-clone-frontend dev
 ```
+
+> Tip: from inside a workspace directory you can just run `pnpm dev`, e.g.
+> `cd Backend && pnpm dev`.
 
 The Vite dev server proxies `/users`, `/captains`, `/rides`, and `/ws` to the
 backend automatically, so no extra CORS setup is needed.
@@ -137,18 +138,22 @@ backend automatically, so no extra CORS setup is needed.
 
 ## 🧩 Scripts
 
-### Backend
+> All commands use `pnpm`. From the repo root, target a workspace with
+> `pnpm --filter <name> <script>`; or `cd` into a workspace dir and run the
+> script directly.
+
+### Backend (`uber-clone-backend`)
 ```bash
-npm run dev    # nodemon development server
-npm start      # production server
+pnpm --filter uber-clone-backend dev    # nodemon development server
+pnpm --filter uber-clone-backend start  # production server
 ```
 
-### Frontend
+### Frontend (`uber-clone-frontend`)
 ```bash
-npm run dev      # Vite dev server
-npm run build    # production build
-npm run lint     # ESLint
-npm run preview  # preview the production build
+pnpm --filter uber-clone-frontend dev      # Vite dev server
+pnpm --filter uber-clone-frontend build    # production build
+pnpm --filter uber-clone-frontend lint     # ESLint
+pnpm --filter uber-clone-frontend preview  # preview the production build
 ```
 
 ---
@@ -175,6 +180,8 @@ uber-clone/
 │   │   └── utils/            # axios instance, WebSocket client
 │   ├── vite.config.js        # dev proxy to backend
 │   └── package.json
+├── pnpm-workspace.yaml       # pnpm workspace (Backend + Frontend)
+├── .npmrc                    # pnpm settings
 ├── PRD.md                    # Full product requirements doc
 └── README.md
 ```
