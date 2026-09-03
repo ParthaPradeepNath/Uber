@@ -13,40 +13,43 @@ const VEHICLES = [
 ];
 
 const STATUS_STEP = {
-    'pending': 0,
-    'accepted': 1,
+    pending: 0,
+    accepted: 1,
     'in-progress': 2,
-    'completed': 3,
+    completed: 3,
 };
 
 const UserDashboard = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const [ pickup, setPickup ] = useState(null);
-    const [ destination, setDestination ] = useState(null);
-    const [ selectedVehicle, setSelectedVehicle ] = useState('car');
-    const [ fareData, setFareData ] = useState(null);
-    const [ estimating, setEstimating ] = useState(false);
-    const [ requesting, setRequesting ] = useState(false);
-    const [ activeRide, setActiveRide ] = useState(null);
-    const [ captainLocation, setCaptainLocation ] = useState(null);
-    const [ waitTime, setWaitTime ] = useState(0);
+    const [pickup, setPickup] = useState(null);
+    const [destination, setDestination] = useState(null);
+    const [selectedVehicle, setSelectedVehicle] = useState('car');
+    const [fareData, setFareData] = useState(null);
+    const [estimating, setEstimating] = useState(false);
+    const [requesting, setRequesting] = useState(false);
+    const [activeRide, setActiveRide] = useState(null);
+    const [captainLocation, setCaptainLocation] = useState(null);
+    const [waitTime, setWaitTime] = useState(0);
 
     useEffect(() => {
         if (!user?._id) return;
         rideSocket.connect('user', user._id);
         return () => rideSocket.disconnect();
-    }, [ user ]);
+    }, [user]);
 
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
-                    setPickup((prev) => prev || {
-                        name: 'My location',
-                        latitude: pos.coords.latitude,
-                        longitude: pos.coords.longitude,
-                    });
+                    setPickup(
+                        (prev) =>
+                            prev || {
+                                name: 'My location',
+                                latitude: pos.coords.latitude,
+                                longitude: pos.coords.longitude,
+                            },
+                    );
                 },
                 () => {},
                 { enableHighAccuracy: true, timeout: 5000 },
@@ -66,14 +69,14 @@ const UserDashboard = () => {
         } finally {
             setEstimating(false);
         }
-    }, [ pickup, destination ]);
+    }, [pickup, destination]);
 
     useEffect(() => {
         if (pickup && destination && pickup.name !== destination.name) {
             const timer = setTimeout(estimateFare, 0);
             return () => clearTimeout(timer);
         }
-    }, [ pickup, destination, estimateFare ]);
+    }, [pickup, destination, estimateFare]);
 
     const requestRide = async () => {
         setRequesting(true);
@@ -123,13 +126,13 @@ const UserDashboard = () => {
             unsubStarted();
             unsubCompleted();
         };
-    }, [ activeRide ]);
+    }, [activeRide]);
 
     useEffect(() => {
-        if (!activeRide || ![ 'accepted', 'in-progress' ].includes(activeRide.status)) return;
+        if (!activeRide || !['accepted', 'in-progress'].includes(activeRide.status)) return;
         const timer = setInterval(() => setWaitTime((t) => t + 1), 1000);
         return () => clearInterval(timer);
-    }, [ activeRide ]);
+    }, [activeRide]);
 
     const cancelRide = async () => {
         try {
@@ -144,10 +147,27 @@ const UserDashboard = () => {
     };
 
     const markers = [];
-    if (pickup) markers.push({ lat: pickup.latitude, lng: pickup.longitude, color: '#10b461', popup: 'Pickup' });
-    if (destination) markers.push({ lat: destination.latitude, lng: destination.longitude, color: '#e11d48', popup: 'Destination' });
-    if (captainLocation && [ 'accepted', 'in-progress' ].includes(activeRide?.status)) {
-        markers.push({ lat: captainLocation.lat, lng: captainLocation.lng, color: '#111', popup: 'Your driver' });
+    if (pickup)
+        markers.push({
+            lat: pickup.latitude,
+            lng: pickup.longitude,
+            color: '#10b461',
+            popup: 'Pickup',
+        });
+    if (destination)
+        markers.push({
+            lat: destination.latitude,
+            lng: destination.longitude,
+            color: '#e11d48',
+            popup: 'Destination',
+        });
+    if (captainLocation && ['accepted', 'in-progress'].includes(activeRide?.status)) {
+        markers.push({
+            lat: captainLocation.lat,
+            lng: captainLocation.lng,
+            color: '#111',
+            popup: 'Your driver',
+        });
     }
 
     return (
@@ -178,10 +198,10 @@ const UserDashboard = () => {
                 <MapView
                     center={
                         captainLocation
-                            ? [ captainLocation.lat, captainLocation.lng ]
+                            ? [captainLocation.lat, captainLocation.lng]
                             : pickup
-                                ? [ pickup.latitude, pickup.longitude ]
-                                : [ 12.9716, 77.5946 ]
+                              ? [pickup.latitude, pickup.longitude]
+                              : [12.9716, 77.5946]
                     }
                     markers={markers}
                 />
@@ -213,7 +233,7 @@ const UserDashboard = () => {
                             <>
                                 <div className="flex gap-3 mb-4">
                                     {VEHICLES.map((v) => {
-                                        const fare = fareData.fares[ v.type ]?.fare;
+                                        const fare = fareData.fares[v.type]?.fare;
                                         return (
                                             <button
                                                 key={v.type}
@@ -225,8 +245,12 @@ const UserDashboard = () => {
                                                 }`}
                                             >
                                                 <div className="text-2xl">{v.icon}</div>
-                                                <div className="font-semibold text-sm">{v.label}</div>
-                                                <div className="text-xs text-gray-500">{v.desc}</div>
+                                                <div className="font-semibold text-sm">
+                                                    {v.label}
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    {v.desc}
+                                                </div>
                                                 <div className="font-bold mt-1 text-sm">
                                                     ${fare ? fare.toFixed(2) : '—'}
                                                 </div>
@@ -241,7 +265,9 @@ const UserDashboard = () => {
                             </>
                         ) : (
                             <p className="text-center text-gray-500 text-sm mb-3">
-                                {estimating ? 'Estimating fare...' : 'Set pickup and destination to see fares'}
+                                {estimating
+                                    ? 'Estimating fare...'
+                                    : 'Set pickup and destination to see fares'}
                             </p>
                         )}
 
@@ -254,11 +280,7 @@ const UserDashboard = () => {
                         </button>
                     </>
                 ) : (
-                    <RideStatusPanel
-                        ride={activeRide}
-                        waitTime={waitTime}
-                        onCancel={cancelRide}
-                    />
+                    <RideStatusPanel ride={activeRide} waitTime={waitTime} onCancel={cancelRide} />
                 )}
             </div>
         </div>
@@ -266,8 +288,8 @@ const UserDashboard = () => {
 };
 
 const RideStatusPanel = ({ ride, waitTime, onCancel }) => {
-    const step = STATUS_STEP[ ride.status ] || 0;
-    const steps = [ 'Waiting', 'Driver on the way', 'In progress', 'Completed' ];
+    const step = STATUS_STEP[ride.status] || 0;
+    const steps = ['Waiting', 'Driver on the way', 'In progress', 'Completed'];
 
     if (ride.status === 'pending') {
         return (
@@ -281,7 +303,10 @@ const RideStatusPanel = ({ ride, waitTime, onCancel }) => {
                     <p className="text-gray-500">→ {ride.destinationAddress}</p>
                     <p className="font-bold mt-1">${ride.fare?.toFixed(2)}</p>
                 </div>
-                <button onClick={onCancel} className="w-full bg-red-600 text-white font-semibold py-3 rounded-lg">
+                <button
+                    onClick={onCancel}
+                    className="w-full bg-red-600 text-white font-semibold py-3 rounded-lg"
+                >
                     Cancel Ride
                 </button>
             </div>
@@ -298,10 +323,14 @@ const RideStatusPanel = ({ ride, waitTime, onCancel }) => {
                     <p className="font-medium">{ride.pickupAddress}</p>
                     <p className="text-gray-500">→ {ride.destinationAddress}</p>
                     <p className="font-bold mt-1 text-green-700">
-                        Paid ${ride.fare?.toFixed(2)} • {ride.payment === 'completed' ? '✓' : 'Pending'}
+                        Paid ${ride.fare?.toFixed(2)} •{' '}
+                        {ride.payment === 'completed' ? '✓' : 'Pending'}
                     </p>
                 </div>
-                <button onClick={onCancel} className="w-full bg-black text-white font-semibold py-3 rounded-lg">
+                <button
+                    onClick={onCancel}
+                    className="w-full bg-black text-white font-semibold py-3 rounded-lg"
+                >
                     Book Another Ride
                 </button>
             </div>
@@ -314,19 +343,25 @@ const RideStatusPanel = ({ ride, waitTime, onCancel }) => {
                 <h2 className="font-bold text-lg">
                     {ride.status === 'accepted' ? 'Driver on the way' : 'On your way'}
                 </h2>
-                <span className="text-gray-500 text-sm">{Math.floor(waitTime / 60)}:{String(waitTime % 60).padStart(2, '0')}</span>
+                <span className="text-gray-500 text-sm">
+                    {Math.floor(waitTime / 60)}:{String(waitTime % 60).padStart(2, '0')}
+                </span>
             </div>
 
             <div className="flex items-center gap-2 mb-3">
                 {steps.map((s, i) => (
                     <React.Fragment key={s}>
-                        <div className={`flex-1 h-1.5 rounded ${i <= step ? 'bg-green-500' : 'bg-gray-200'}`} />
+                        <div
+                            className={`flex-1 h-1.5 rounded ${i <= step ? 'bg-green-500' : 'bg-gray-200'}`}
+                        />
                     </React.Fragment>
                 ))}
             </div>
             <div className="flex justify-between text-xs text-gray-500 mb-3">
                 {steps.map((s, i) => (
-                    <span key={s} className={i === step ? 'text-green-600 font-medium' : ''}>{s}</span>
+                    <span key={s} className={i === step ? 'text-green-600 font-medium' : ''}>
+                        {s}
+                    </span>
                 ))}
             </div>
 
@@ -336,7 +371,10 @@ const RideStatusPanel = ({ ride, waitTime, onCancel }) => {
                 <p className="font-bold mt-1">${ride.fare?.toFixed(2)}</p>
             </div>
 
-            <button onClick={onCancel} className="w-full bg-red-600 text-white font-semibold py-3 rounded-lg">
+            <button
+                onClick={onCancel}
+                className="w-full bg-red-600 text-white font-semibold py-3 rounded-lg"
+            >
                 End Ride
             </button>
         </div>

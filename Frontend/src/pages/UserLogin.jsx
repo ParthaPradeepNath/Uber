@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const UserLogin = () => {
-    const [ email, setEmail ] = useState('');
-    const [ password, setPassword ] = useState('');
-    const [ error, setError ] = useState('');
-    const [ loading, setLoading ] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { loginUser } = useAuth();
     const navigate = useNavigate();
 
@@ -53,9 +53,7 @@ const UserLogin = () => {
                         placeholder="Password"
                     />
 
-                    {error && (
-                        <p className="text-red-600 text-sm mb-3">{error}</p>
-                    )}
+                    {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
 
                     <button
                         disabled={loading}

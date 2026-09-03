@@ -20,7 +20,7 @@ const MapView = ({
 
     useEffect(() => {
         onMapClickRef.current = onMapClick;
-    }, [ onMapClick ]);
+    }, [onMapClick]);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -64,11 +64,11 @@ const MapView = ({
                     html: `<div class="w-4 h-4 rounded-full border-2 border-white shadow" style="background:${marker.color || '#000'}"></div>`,
                 });
 
-            const m = L.marker([ marker.lat, marker.lng ], { icon }).addTo(map);
+            const m = L.marker([marker.lat, marker.lng], { icon }).addTo(map);
             if (marker.popup) m.bindPopup(marker.popup);
             markersRef.current.push(m);
         });
-    }, [ markers ]);
+    }, [markers]);
 
     useEffect(() => {
         const map = mapRef.current;
@@ -84,16 +84,16 @@ const MapView = ({
                 weight: 4,
                 opacity: 0.8,
             }).addTo(map);
-            map.fitBounds(polylineRef.current.getBounds(), { padding: [ 40, 40 ] });
+            map.fitBounds(polylineRef.current.getBounds(), { padding: [40, 40] });
         }
-    }, [ polyline ]);
+    }, [polyline]);
 
     useEffect(() => {
         const map = mapRef.current;
         if (map && center) {
             map.setView(center, map.getZoom());
         }
-    }, [ center ]);
+    }, [center]);
 
     return (
         <div

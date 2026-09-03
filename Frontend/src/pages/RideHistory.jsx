@@ -6,8 +6,8 @@ import { rideApi } from '../services/rideService';
 const RideHistory = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
-    const [ rides, setRides ] = useState([]);
-    const [ loading, setLoading ] = useState(true);
+    const [rides, setRides] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -72,7 +72,9 @@ const RideHistory = () => {
                         {rides.map((ride) => (
                             <div key={ride._id} className="bg-white rounded-xl shadow p-4">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${statusColors[ ride.status ] || 'bg-gray-100'}`}>
+                                    <span
+                                        className={`text-xs font-semibold px-2 py-1 rounded-full ${statusColors[ride.status] || 'bg-gray-100'}`}
+                                    >
                                         {ride.status}
                                     </span>
                                     <span className="text-sm text-gray-500">
@@ -80,7 +82,9 @@ const RideHistory = () => {
                                     </span>
                                 </div>
                                 <p className="text-sm font-medium">{ride.pickupAddress}</p>
-                                <p className="text-xs text-gray-500 mb-2">→ {ride.destinationAddress}</p>
+                                <p className="text-xs text-gray-500 mb-2">
+                                    → {ride.destinationAddress}
+                                </p>
                                 <div className="flex items-center justify-between border-t pt-2">
                                     <span className="text-sm text-gray-600 capitalize">
                                         {ride.vehicleType} • {ride.distance?.toFixed(1)} km

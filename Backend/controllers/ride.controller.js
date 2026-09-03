@@ -74,17 +74,21 @@ module.exports.confirmRide = async (req, res, next) => {
         captainId: req.captain._id,
     });
 
-    sendToUser('ride-accepted', {
-        ride: {
-            _id: ride._id,
-            status: ride.status,
-            captain: {
-                _id: req.captain._id,
-                fullname: req.captain.fullname,
-                vehicle: req.captain.vehicle,
+    sendToUser(
+        'ride-accepted',
+        {
+            ride: {
+                _id: ride._id,
+                status: ride.status,
+                captain: {
+                    _id: req.captain._id,
+                    fullname: req.captain.fullname,
+                    vehicle: req.captain.vehicle,
+                },
             },
         },
-    }, ride.user.toString());
+        ride.user.toString(),
+    );
 
     res.status(201).json({ ride });
 };
@@ -125,12 +129,16 @@ module.exports.startRide = async (req, res, next) => {
         captainId: req.captain._id,
     });
 
-    sendToUser('ride-started', {
-        ride: {
-            _id: ride._id,
-            status: ride.status,
+    sendToUser(
+        'ride-started',
+        {
+            ride: {
+                _id: ride._id,
+                status: ride.status,
+            },
         },
-    }, ride.user.toString());
+        ride.user.toString(),
+    );
 
     res.status(200).json({ ride });
 };
@@ -149,14 +157,18 @@ module.exports.completeRide = async (req, res, next) => {
         captainId: req.captain._id,
     });
 
-    sendToUser('ride-completed', {
-        ride: {
-            _id: ride._id,
-            status: ride.status,
-            fare: ride.fare,
-            payment: ride.payment,
+    sendToUser(
+        'ride-completed',
+        {
+            ride: {
+                _id: ride._id,
+                status: ride.status,
+                fare: ride.fare,
+                payment: ride.payment,
+            },
         },
-    }, ride.user.toString());
+        ride.user.toString(),
+    );
 
     res.status(200).json({ ride });
 };

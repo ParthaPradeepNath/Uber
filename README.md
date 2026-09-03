@@ -38,35 +38,37 @@ An end-to-end, Uber-inspired ride-hailing application:
 
 The entire mapping stack runs on the **OpenStreetMap ecosystem**:
 
-| Need | Service | Cost |
-|------|---------|------|
-| Interactive map | **Leaflet** + OSM tiles | Free |
-| Address search (geocoding) | **Nominatim** (OSM) | Free |
-| Distance / duration routing | **OSRM** public server | Free |
-| Real-time transport | Native `WebSocket` (`ws`) | Free |
+| Need                        | Service                   | Cost |
+| --------------------------- | ------------------------- | ---- |
+| Interactive map             | **Leaflet** + OSM tiles   | Free |
+| Address search (geocoding)  | **Nominatim** (OSM)       | Free |
+| Distance / duration routing | **OSRM** public server    | Free |
+| Real-time transport         | Native `WebSocket` (`ws`) | Free |
 
 ---
 
 ## 🧱 Tech Stack
 
 ### Backend — `Backend/`
-| Layer | Tool |
-|-------|------|
-| Runtime | Node.js (20+) |
-| Framework | Express 5 |
-| Database | MongoDB + Mongoose 9 |
-| Auth | JWT (cookie + Bearer) · bcrypt hashing · token blacklist |
-| Realtime | `ws` bare WebSocket server on `/ws` |
-| Maps | Nominatim geocoding · OSRM routing |
+
+| Layer     | Tool                                                     |
+| --------- | -------------------------------------------------------- |
+| Runtime   | Node.js (20+)                                            |
+| Framework | Express 5                                                |
+| Database  | MongoDB + Mongoose 9                                     |
+| Auth      | JWT (cookie + Bearer) · bcrypt hashing · token blacklist |
+| Realtime  | `ws` bare WebSocket server on `/ws`                      |
+| Maps      | Nominatim geocoding · OSRM routing                       |
 
 ### Frontend — `Frontend/`
-| Layer | Tool |
-|-------|------|
-| UI | React 19 + Vite 8 |
-| Styling | Tailwind CSS 4 |
-| Routing | React Router 7 |
-| Maps | Leaflet + react-leaflet |
-| Data | Axios API layer · custom event-bus socket client |
+
+| Layer   | Tool                                             |
+| ------- | ------------------------------------------------ |
+| UI      | React 19 + Vite 8                                |
+| Styling | Tailwind CSS 4                                   |
+| Routing | React Router 7                                   |
+| Maps    | Leaflet + react-leaflet                          |
+| Data    | Axios API layer · custom event-bus socket client |
 
 ---
 
@@ -143,12 +145,14 @@ backend automatically, so no extra CORS setup is needed.
 > script directly.
 
 ### Backend (`uber-clone-backend`)
+
 ```bash
 pnpm --filter uber-clone-backend dev    # nodemon development server
 pnpm --filter uber-clone-backend start  # production server
 ```
 
 ### Frontend (`uber-clone-frontend`)
+
 ```bash
 pnpm --filter uber-clone-frontend dev      # Vite dev server
 pnpm --filter uber-clone-frontend build    # production build
@@ -211,20 +215,20 @@ uber-clone/
 
 ## 🎯 Feature Checklist
 
-| Feature | Rider | Captain |
-|---------|:-----:|:-------:|
-| Register / Login / Logout | ✅ | ✅ |
-| Vehicle registration | — | ✅ |
-| Go online / offline | — | ✅ |
-| Live location streaming | — | ✅ |
-| Address search / geocoding | ✅ | — |
-| Fare estimation (3 classes) | ✅ | ✅ (see request) |
-| Request / cancel ride | ✅ | — |
-| Receive / accept / decline ride | — | ✅ |
-| Live captain tracking | ✅ | — |
-| OTP-verified trip start | — | ✅ |
-| Trip history | ✅ | — |
-| Payment status record | ✅ | ✅ |
+| Feature                         | Rider |     Captain      |
+| ------------------------------- | :---: | :--------------: |
+| Register / Login / Logout       |  ✅   |        ✅        |
+| Vehicle registration            |   —   |        ✅        |
+| Go online / offline             |   —   |        ✅        |
+| Live location streaming         |   —   |        ✅        |
+| Address search / geocoding      |  ✅   |        —         |
+| Fare estimation (3 classes)     |  ✅   | ✅ (see request) |
+| Request / cancel ride           |  ✅   |        —         |
+| Receive / accept / decline ride |   —   |        ✅        |
+| Live captain tracking           |  ✅   |        —         |
+| OTP-verified trip start         |   —   |        ✅        |
+| Trip history                    |  ✅   |        —         |
+| Payment status record           |  ✅   |        ✅        |
 
 ---
 

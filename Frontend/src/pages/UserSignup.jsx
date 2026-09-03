@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const UserSignup = () => {
-    const [ email, setEmail ] = useState('');
-    const [ password, setPassword ] = useState('');
-    const [ firstName, setFirstName ] = useState('');
-    const [ lastName, setLastName ] = useState('');
-    const [ error, setError ] = useState('');
-    const [ loading, setLoading ] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { registerUser } = useAuth();
     const navigate = useNavigate();
 
@@ -24,7 +24,10 @@ const UserSignup = () => {
             });
             navigate('/user-home');
         } catch (err) {
-            const msg = err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || 'Registration failed';
+            const msg =
+                err.response?.data?.message ||
+                err.response?.data?.errors?.[0]?.msg ||
+                'Registration failed';
             setError(msg);
         } finally {
             setLoading(false);

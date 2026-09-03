@@ -1,0 +1,13 @@
+{
+    "name": "uber-clone-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "packageManager": "pnpm@11.24.0",
+    "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
+    },
+    "devDependencies": {
+        "prettier": "^3.9.6"
+    }
+}

@@ -9,12 +9,12 @@ import rideSocket from '../utils/rideSocket';
 const CaptainDashboard = () => {
     const { captain, logout } = useAuth();
     const navigate = useNavigate();
-    const [ position, setPosition ] = useState(null);
-    const [ isOnline, setIsOnline ] = useState(false);
-    const [ incomingRide, setIncomingRide ] = useState(null);
-    const [ currentRide, setCurrentRide ] = useState(null);
-    const [ otpInput, setOtpInput ] = useState('');
-    const [ busy, setBusy ] = useState(false);
+    const [position, setPosition] = useState(null);
+    const [isOnline, setIsOnline] = useState(false);
+    const [incomingRide, setIncomingRide] = useState(null);
+    const [currentRide, setCurrentRide] = useState(null);
+    const [otpInput, setOtpInput] = useState('');
+    const [busy, setBusy] = useState(false);
     const watchIdRef = useRef(null);
 
     const startGeolocation = useCallback(() => {
@@ -57,7 +57,7 @@ const CaptainDashboard = () => {
         } catch (error) {
             console.error('Toggle failed', error);
         }
-    }, [ startGeolocation, stopGeolocation ]);
+    }, [startGeolocation, stopGeolocation]);
 
     useEffect(() => {
         if (!isOnline || !captain?._id) return;
@@ -69,14 +69,14 @@ const CaptainDashboard = () => {
         return () => {
             unsubRideRequest();
         };
-    }, [ isOnline, captain ]);
+    }, [isOnline, captain]);
 
     useEffect(() => {
         return () => {
             stopGeolocation();
             rideSocket.disconnect();
         };
-    }, [ stopGeolocation ]);
+    }, [stopGeolocation]);
 
     const acceptRide = async () => {
         if (!incomingRide) return;
@@ -157,10 +157,17 @@ const CaptainDashboard = () => {
 
             <div className="relative flex-1">
                 <MapView
-                    center={position ? [ position.latitude, position.longitude ] : [ 12.9716, 77.5946 ]}
+                    center={position ? [position.latitude, position.longitude] : [12.9716, 77.5946]}
                     markers={
                         position
-                            ? [ { lat: position.latitude, lng: position.longitude, color: '#10b461', popup: 'You' } ]
+                            ? [
+                                  {
+                                      lat: position.latitude,
+                                      lng: position.longitude,
+                                      color: '#10b461',
+                                      popup: 'You',
+                                  },
+                              ]
                             : []
                     }
                 />
@@ -169,9 +176,13 @@ const CaptainDashboard = () => {
                     <div className="absolute bottom-6 left-4 right-4 bg-white rounded-xl shadow-lg z-20 p-4">
                         <div className="flex items-center justify-between mb-2">
                             <h2 className="font-bold text-lg">Active Ride</h2>
-                            <span className={`text-xs font-semibold px-2 py-1 rounded-full capitalize ${
-                                currentRide.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                            }`}>
+                            <span
+                                className={`text-xs font-semibold px-2 py-1 rounded-full capitalize ${
+                                    currentRide.status === 'completed'
+                                        ? 'bg-green-100 text-green-700'
+                                        : 'bg-blue-100 text-blue-700'
+                                }`}
+                            >
                                 {currentRide.status}
                             </span>
                         </div>
@@ -182,11 +193,15 @@ const CaptainDashboard = () => {
                             </p>
                             <p className="flex justify-between">
                                 <span className="text-gray-500">Destination</span>
-                                <span className="font-medium">{currentRide.destinationAddress}</span>
+                                <span className="font-medium">
+                                    {currentRide.destinationAddress}
+                                </span>
                             </p>
                             <p className="flex justify-between">
                                 <span className="text-gray-500">Fare</span>
-                                <span className="font-bold text-green-600">${currentRide.fare?.toFixed(2)}</span>
+                                <span className="font-bold text-green-600">
+                                    ${currentRide.fare?.toFixed(2)}
+                                </span>
                             </p>
                         </div>
 
@@ -248,15 +263,21 @@ const CaptainDashboard = () => {
                             </p>
                             <p className="flex justify-between">
                                 <span className="text-gray-500">Destination</span>
-                                <span className="font-medium">{incomingRide.destinationAddress}</span>
+                                <span className="font-medium">
+                                    {incomingRide.destinationAddress}
+                                </span>
                             </p>
                             <p className="flex justify-between">
                                 <span className="text-gray-500">Distance</span>
-                                <span className="font-medium">{incomingRide.distance?.toFixed(1)} km</span>
+                                <span className="font-medium">
+                                    {incomingRide.distance?.toFixed(1)} km
+                                </span>
                             </p>
                             <p className="flex justify-between">
                                 <span className="text-gray-500">Fare</span>
-                                <span className="font-bold text-green-600">${incomingRide.fare?.toFixed(2)}</span>
+                                <span className="font-bold text-green-600">
+                                    ${incomingRide.fare?.toFixed(2)}
+                                </span>
                             </p>
                         </div>
                         <div className="flex gap-3">

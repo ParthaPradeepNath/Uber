@@ -3,6 +3,7 @@
 React 19 + Vite 8 rider & captain dashboards with live Leaflet maps.
 
 ## Stack
+
 - React 19, Vite 8, Tailwind CSS 4, React Router 7
 - Leaflet + react-leaflet for maps
 - Axios API layer, custom native WebSocket client
@@ -24,12 +25,14 @@ The Vite dev server proxies `/users`, `/captains`, `/rides`, and `/ws` to the
 backend on `http://localhost:3000` (see `vite.config.js`).
 
 ## Environment
-| Variable | Default | Purpose |
-|----------|---------|---------|
+
+| Variable       | Default                 | Purpose                        |
+| -------------- | ----------------------- | ------------------------------ |
 | `VITE_API_URL` | (same-origin via proxy) | Override backend REST base URL |
-| `VITE_WS_URL` | (same-origin `/ws`) | Override WebSocket URL |
+| `VITE_WS_URL`  | (same-origin `/ws`)     | Override WebSocket URL         |
 
 ## Scripts
+
 ```bash
 pnpm dev       # dev server
 pnpm build     # production build

@@ -3,18 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const CaptainSignup = () => {
-    const [ email, setEmail ] = useState('');
-    const [ password, setPassword ] = useState('');
-    const [ firstName, setFirstName ] = useState('');
-    const [ lastName, setLastName ] = useState('');
-    const [ vehicle, setVehicle ] = useState({
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [vehicle, setVehicle] = useState({
         color: '',
         plate: '',
         capacity: 4,
         vehicleType: 'car',
     });
-    const [ error, setError ] = useState('');
-    const [ loading, setLoading ] = useState(false);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { registerCaptain } = useAuth();
     const navigate = useNavigate();
 
@@ -36,7 +36,10 @@ const CaptainSignup = () => {
             });
             navigate('/captain-home');
         } catch (err) {
-            const msg = err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || 'Registration failed';
+            const msg =
+                err.response?.data?.message ||
+                err.response?.data?.errors?.[0]?.msg ||
+                'Registration failed';
             setError(msg);
         } finally {
             setLoading(false);
@@ -128,7 +131,9 @@ const CaptainSignup = () => {
                         <select
                             className="bg-[#eeee] mb-6 rounded px-4 py-2 w-full text-base"
                             value={vehicle.vehicleType}
-                            onChange={(e) => setVehicle({ ...vehicle, vehicleType: e.target.value })}
+                            onChange={(e) =>
+                                setVehicle({ ...vehicle, vehicleType: e.target.value })
+                            }
                         >
                             <option value="car">Car</option>
                             <option value="auto">Auto Rickshaw</option>

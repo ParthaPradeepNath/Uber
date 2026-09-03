@@ -102,7 +102,7 @@ function handleUpdateLocation(ws, message) {
         longitude,
     });
 
-    for (const [ clientWs ] of connectedClients) {
+    for (const [clientWs] of connectedClients) {
         if (
             clientWs.metadata &&
             clientWs.metadata.role === 'user' &&
@@ -142,7 +142,7 @@ function send(ws, data) {
 function broadcastToUsers(type, data) {
     const payload = JSON.stringify({ type, ...data });
 
-    for (const [ ws ] of connectedClients) {
+    for (const [ws] of connectedClients) {
         if (ws.metadata && ws.metadata.role === 'user') {
             if (ws.readyState === ws.OPEN) {
                 ws.send(payload);
@@ -154,7 +154,7 @@ function broadcastToUsers(type, data) {
 function sendToUser(type, data, userId) {
     const payload = JSON.stringify({ type, ...data });
 
-    for (const [ ws ] of connectedClients) {
+    for (const [ws] of connectedClients) {
         if (ws.metadata && ws.metadata.role === 'user') {
             if (userId && ws.metadata.userId !== userId) {
                 continue;
@@ -169,7 +169,7 @@ function sendToUser(type, data, userId) {
 function sendToCaptain(type, data, captainId) {
     const payload = JSON.stringify({ type, ...data });
 
-    for (const [ ws ] of connectedClients) {
+    for (const [ws] of connectedClients) {
         if (ws.metadata && ws.metadata.role === 'captain') {
             if (captainId && ws.metadata.userId !== captainId) {
                 continue;
@@ -184,7 +184,7 @@ function sendToCaptain(type, data, captainId) {
 function broadcastToCaptains(type, data) {
     const payload = JSON.stringify({ type, ...data });
 
-    for (const [ ws ] of connectedClients) {
+    for (const [ws] of connectedClients) {
         if (ws.metadata && ws.metadata.role === 'captain') {
             if (ws.readyState === ws.OPEN) {
                 ws.send(payload);

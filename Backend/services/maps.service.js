@@ -12,7 +12,7 @@ const getCoordinatesFromAddress = async (address) => {
     const response = await fetch(url, {
         headers: {
             'User-Agent': 'UberClone/1.0',
-            'Accept': 'application/json',
+            Accept: 'application/json',
         },
     });
 
@@ -34,8 +34,8 @@ const getCoordinatesFromAddress = async (address) => {
 };
 
 const getDistanceAndDuration = async (origin, destination) => {
-    const [ lng1, lat1 ] = [ origin.longitude, origin.latitude ];
-    const [ lng2, lat2 ] = [ destination.longitude, destination.latitude ];
+    const [lng1, lat1] = [origin.longitude, origin.latitude];
+    const [lng2, lat2] = [destination.longitude, destination.latitude];
 
     const url = `${OSRM_URL}/${lng1},${lat1};${lng2},${lat2}?overview=false`;
     const response = await fetch(url);
@@ -73,15 +73,15 @@ const haversineDistance = (point1, point2) => {
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRad(point1.latitude)) *
-        Math.cos(toRad(point2.latitude)) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
+            Math.cos(toRad(point2.latitude)) *
+            Math.sin(dLng / 2) *
+            Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 };
 
 const calculateFare = (distanceKm, durationMin, vehicleType) => {
-    const rate = VEHICLE_RATES[ vehicleType ] || VEHICLE_RATES.car;
+    const rate = VEHICLE_RATES[vehicleType] || VEHICLE_RATES.car;
     const fare = rate.baseFare + rate.perKm * distanceKm + rate.perMin * durationMin;
     return Math.round(fare * 100) / 100;
 };

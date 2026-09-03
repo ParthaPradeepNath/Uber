@@ -7,10 +7,10 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-    const [ token, setToken ] = useState(() => localStorage.getItem('token') || null);
-    const [ user, setUser ] = useState(null);
-    const [ captain, setCaptain ] = useState(null);
-    const [ loading, setLoading ] = useState(true);
+    const [token, setToken] = useState(() => localStorage.getItem('token') || null);
+    const [user, setUser] = useState(null);
+    const [captain, setCaptain] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (token) {
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         } else {
             localStorage.removeItem('token');
         }
-    }, [ token ]);
+    }, [token]);
 
     const loginUser = useCallback(async (email, password) => {
         const { data } = await userApi.login({ email, password });
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
         } catch {
             setToken(null);
         }
-    }, [ token ]);
+    }, [token]);
 
     useEffect(() => {
         const hydrate = async () => {
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         };
         hydrate();
-    }, [ token, refreshUser ]);
+    }, [token, refreshUser]);
 
     const value = {
         token,
@@ -95,11 +95,7 @@ export const AuthProvider = ({ children }) => {
         isUser: !!user,
     };
 
-    return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

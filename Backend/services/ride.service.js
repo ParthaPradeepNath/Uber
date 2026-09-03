@@ -23,11 +23,11 @@ const createRide = async ({
         user,
         pickup: {
             type: 'Point',
-            coordinates: [ pickup.longitude, pickup.latitude ],
+            coordinates: [pickup.longitude, pickup.latitude],
         },
         destination: {
             type: 'Point',
-            coordinates: [ destination.longitude, destination.latitude ],
+            coordinates: [destination.longitude, destination.latitude],
         },
         pickupAddress,
         destinationAddress,
@@ -42,7 +42,7 @@ const createRide = async ({
 };
 
 const getFare = async ({ pickupAddress, destinationAddress }) => {
-    const [ pickup, destination ] = await Promise.all([
+    const [pickup, destination] = await Promise.all([
         mapsService.getCoordinatesFromAddress(pickupAddress),
         mapsService.getCoordinatesFromAddress(destinationAddress),
     ]);
@@ -76,7 +76,7 @@ const findAvailableCaptains = async (pickup, vehicleType, radiusKm = 10) => {
             $geoNear: {
                 near: {
                     type: 'Point',
-                    coordinates: [ pickup.longitude, pickup.latitude ],
+                    coordinates: [pickup.longitude, pickup.latitude],
                 },
                 distanceField: 'distance',
                 maxDistance: maxDistance * 6378.1 * 1000,
@@ -157,7 +157,7 @@ const cancelRide = async ({ rideId, user }) => {
         throw new Error('Only the ride owner can cancel this ride');
     }
 
-    if ([ 'accepted', 'in-progress', 'completed' ].includes(ride.status)) {
+    if (['accepted', 'in-progress', 'completed'].includes(ride.status)) {
         throw new Error('Ride cannot be cancelled at this stage');
     }
 
@@ -169,10 +169,7 @@ const cancelRide = async ({ rideId, user }) => {
 };
 
 const getRidesByUser = async (userId) => {
-    return await rideModel
-        .find({ user: userId })
-        .populate('captain')
-        .sort({ createdAt: -1 });
+    return await rideModel.find({ user: userId }).populate('captain').sort({ createdAt: -1 });
 };
 
 const generateOtp = () => {
