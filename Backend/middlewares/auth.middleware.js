@@ -1,9 +1,9 @@
-const userModel = require('../models/user.model.js');
-const jwt = require('jsonwebtoken');
-const BlacklistTokenModel = require('../models/blacklistToken.model.js');
-const captainModel = require('../models/captain.model.js');
+import userModel from '../models/user.model.js';
+import jwt from 'jsonwebtoken';
+import BlacklistTokenModel from '../models/blacklistToken.model.js';
+import captainModel from '../models/captain.model.js';
 
-module.exports.authUser = async (req, res, next) => {
+export const authUser = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -31,7 +31,7 @@ module.exports.authUser = async (req, res, next) => {
     }
 };
 
-module.exports.authCaptain = async (req, res, next) => {
+export const authCaptain = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
 
     if (!token) {

@@ -1,6 +1,6 @@
-const rideModel = require('../models/ride.model');
-const captainModel = require('../models/captain.model');
-const mapsService = require('./maps.service');
+import rideModel from '../models/ride.model.js';
+import captainModel from '../models/captain.model.js';
+import * as mapsService from './maps.service.js';
 
 const createRide = async ({
     user,
@@ -176,7 +176,7 @@ const generateOtp = () => {
     return Math.floor(1000 + Math.random() * 9000).toString();
 };
 
-module.exports = {
+export {
     createRide,
     getFare,
     findAvailableCaptains,

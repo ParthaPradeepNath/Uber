@@ -1,8 +1,14 @@
-const express = require('express');
+import express from 'express';
+import { body } from 'express-validator'; // import kiya hai to validate
+import {
+    registerUser,
+    loginUser,
+    getUserProfile,
+    logoutUser,
+} from '../controllers/user.controller.js';
+import { authUser } from '../middlewares/auth.middleware.js';
+
 const router = express.Router();
-const { body } = require('express-validator'); // import kiya hai to validate
-const userController = require('../controllers/user.controller');
-const authMiddleware = require('../middlewares/auth.middleware');
 
 router.post(
     '/register',
@@ -15,7 +21,7 @@ router.post(
             .isLength({ min: 6 })
             .withMessage('Password must be atleast 6 character long'),
     ],
-    userController.registerUser,
+    registerUser,
 );
 
 router.post(
@@ -26,10 +32,10 @@ router.post(
             .isLength({ min: 6 })
             .withMessage('Password must be atleast 6 character long'),
     ],
-    userController.loginUser,
+    loginUser,
 );
 
-router.get('/profile', authMiddleware.authUser, userController.getUserProfile);
+router.get('/profile', authUser, getUserProfile);
 
-router.get('/logout', authMiddleware.authUser, userController.logoutUser);
-module.exports = router;
+router.get('/logout', authUser, logoutUser);
+export default router;

@@ -1,10 +1,10 @@
-const rideService = require('../services/ride.service');
-const mapsService = require('../services/maps.service');
-const rideModel = require('../models/ride.model');
-const { broadcastToCaptains, sendToUser } = require('../services/socket.service');
-const { validationResult } = require('express-validator');
+import * as rideService from '../services/ride.service.js';
+import * as mapsService from '../services/maps.service.js';
+import rideModel from '../models/ride.model.js';
+import { broadcastToCaptains, sendToUser } from '../services/socket.service.js';
+import { validationResult } from 'express-validator';
 
-module.exports.getFare = async (req, res, next) => {
+export const getFare = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -17,7 +17,7 @@ module.exports.getFare = async (req, res, next) => {
     res.status(200).json(fareResponse);
 };
 
-module.exports.createRide = async (req, res, next) => {
+export const createRide = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -61,7 +61,7 @@ module.exports.createRide = async (req, res, next) => {
     });
 };
 
-module.exports.confirmRide = async (req, res, next) => {
+export const confirmRide = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -93,7 +93,7 @@ module.exports.confirmRide = async (req, res, next) => {
     res.status(201).json({ ride });
 };
 
-module.exports.getRideStatus = async (req, res, next) => {
+export const getRideStatus = async (req, res, next) => {
     const { rideId } = req.params;
 
     const ride = await rideService.getRideById(rideId);
@@ -105,7 +105,7 @@ module.exports.getRideStatus = async (req, res, next) => {
     res.status(200).json({ ride });
 };
 
-module.exports.startRide = async (req, res, next) => {
+export const startRide = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -143,7 +143,7 @@ module.exports.startRide = async (req, res, next) => {
     res.status(200).json({ ride });
 };
 
-module.exports.completeRide = async (req, res, next) => {
+export const completeRide = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -173,7 +173,7 @@ module.exports.completeRide = async (req, res, next) => {
     res.status(200).json({ ride });
 };
 
-module.exports.cancelRide = async (req, res, next) => {
+export const cancelRide = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -186,7 +186,7 @@ module.exports.cancelRide = async (req, res, next) => {
     res.status(200).json({ ride });
 };
 
-module.exports.getRideHistory = async (req, res, next) => {
+export const getRideHistory = async (req, res, next) => {
     const rides = await rideService.getRidesByUser(req.user._id);
 
     res.status(200).json({ rides });

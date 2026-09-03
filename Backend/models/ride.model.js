@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const rideSchema = new mongoose.Schema(
     {
@@ -95,4 +95,4 @@ rideSchema.index({ destination: '2dsphere' });
 
 const rideModel = mongoose.model('Ride', rideSchema);
 
-module.exports = rideModel;
+export default rideModel;

@@ -1,6 +1,6 @@
-const captainModel = require('../models/captain.model');
+import captainModel from '../models/captain.model.js';
 
-module.exports.createCaptain = async ({
+export const createCaptain = async ({
     firstname,
     lastname,
     email,

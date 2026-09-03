@@ -1,9 +1,9 @@
-const captainModel = require('../models/captain.model');
-const captainService = require('../services/captain.service');
-const blackListTokenModel = require('../models/blacklistToken.model');
-const { validationResult } = require('express-validator');
+import captainModel from '../models/captain.model.js';
+import { createCaptain } from '../services/captain.service.js';
+import blackListTokenModel from '../models/blacklistToken.model.js';
+import { validationResult } from 'express-validator';
 
-module.exports.registerCaptain = async (req, res, next) => {
+export const registerCaptain = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -19,7 +19,7 @@ module.exports.registerCaptain = async (req, res, next) => {
 
     const hashedPassword = await captainModel.hashPassword(password);
 
-    const captain = await captainService.createCaptain({
+    const captain = await createCaptain({
         firstname: fullname.firstname,
         lastname: fullname.lastname,
         email,
@@ -35,7 +35,7 @@ module.exports.registerCaptain = async (req, res, next) => {
     res.status(201).json({ token, captain });
 };
 
-module.exports.loginCaptain = async (req, res, next) => {
+export const loginCaptain = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -62,11 +62,11 @@ module.exports.loginCaptain = async (req, res, next) => {
     res.status(200).json({ token, captain });
 };
 
-module.exports.getCaptainProfile = async (req, res, next) => {
+export const getCaptainProfile = async (req, res, next) => {
     res.status(200).json({ captain: req.captain });
 };
 
-module.exports.logoutCaptain = async (req, res, next) => {
+export const logoutCaptain = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
 
     await blackListTokenModel.create({ token });
@@ -76,7 +76,7 @@ module.exports.logoutCaptain = async (req, res, next) => {
     res.status(200).json({ message: 'Logout successfully' });
 };
 
-module.exports.toggleCaptainStatus = async (req, res, next) => {
+export const toggleCaptainStatus = async (req, res, next) => {
     const captain = await captainModel.findById(req.captain._id);
 
     captain.status = captain.status === 'active' ? 'inactive' : 'active';
@@ -85,7 +85,7 @@ module.exports.toggleCaptainStatus = async (req, res, next) => {
     res.status(200).json({ captain });
 };
 
-module.exports.updateCaptainLocation = async (req, res, next) => {
+export const updateCaptainLocation = async (req, res, next) => {
     const { latitude, longitude } = req.body;
 
     const captain = await captainModel.findByIdAndUpdate(

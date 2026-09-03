@@ -1,4 +1,4 @@
-const { WebSocketServer } = require('ws');
+import { WebSocketServer } from 'ws';
 
 let wss;
 
@@ -197,10 +197,4 @@ function removeClient(ws) {
     connectedClients.delete(ws);
 }
 
-module.exports = {
-    initWebSocket,
-    broadcastToUsers,
-    sendToUser,
-    sendToCaptain,
-    broadcastToCaptains,
-};
+export { initWebSocket, broadcastToUsers, sendToUser, sendToCaptain, broadcastToCaptains };

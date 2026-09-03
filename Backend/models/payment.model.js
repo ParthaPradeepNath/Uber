@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema(
     {
@@ -42,4 +42,4 @@ const paymentSchema = new mongoose.Schema(
 
 const paymentModel = mongoose.model('Payment', paymentSchema);
 
-module.exports = paymentModel;
+export default paymentModel;

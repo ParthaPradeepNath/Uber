@@ -1,8 +1,16 @@
-const captainController = require('../controllers/captain.controller');
-const express = require('express');
+import express from 'express';
+import { body } from 'express-validator';
+import {
+    registerCaptain,
+    loginCaptain,
+    getCaptainProfile,
+    logoutCaptain,
+    toggleCaptainStatus,
+    updateCaptainLocation,
+} from '../controllers/captain.controller.js';
+import { authCaptain } from '../middlewares/auth.middleware.js';
+
 const router = express.Router();
-const { body } = require('express-validator');
-const authMiddleware = require('../middlewares/auth.middleware');
 
 router.post(
     '/register',
@@ -25,7 +33,7 @@ router.post(
             .isIn(['car', 'motorcycle', 'auto'])
             .withMessage('Vehicle type must be car, motorcycle or auto'),
     ],
-    captainController.registerCaptain,
+    registerCaptain,
 );
 
 router.post(
@@ -36,23 +44,23 @@ router.post(
             .isLength({ min: 6 })
             .withMessage('Password must be at least 6 characters long'),
     ],
-    captainController.loginCaptain,
+    loginCaptain,
 );
 
-router.get('/profile', authMiddleware.authCaptain, captainController.getCaptainProfile);
+router.get('/profile', authCaptain, getCaptainProfile);
 
-router.get('/logout', authMiddleware.authCaptain, captainController.logoutCaptain);
+router.get('/logout', authCaptain, logoutCaptain);
 
-router.patch('/toggle-status', authMiddleware.authCaptain, captainController.toggleCaptainStatus);
+router.patch('/toggle-status', authCaptain, toggleCaptainStatus);
 
 router.patch(
     '/update-location',
     [
-        authMiddleware.authCaptain,
+        authCaptain,
         body('latitude').isFloat({ min: -90, max: 90 }).withMessage('Invalid latitude'),
         body('longitude').isFloat({ min: -180, max: 180 }).withMessage('Invalid longitude'),
     ],
-    captainController.updateCaptainLocation,
+    updateCaptainLocation,
 );
 
-module.exports = router;
+export default router;

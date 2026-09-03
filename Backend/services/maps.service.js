@@ -86,7 +86,7 @@ const calculateFare = (distanceKm, durationMin, vehicleType) => {
     return Math.round(fare * 100) / 100;
 };
 
-module.exports = {
+export {
     getCoordinatesFromAddress,
     getDistanceAndDuration,
     haversineDistance,
